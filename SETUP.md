@@ -117,6 +117,8 @@ Tell the user, briefly:
 2. They need to **start a new Claude Code session** (or run `/mcp` to reconnect) for
    the `get_usage` tool to appear.
 3. After that they can ask things like *"how much usage do I have left?"*
+4. To give Claude a usage budget for a long run, they paste the line from the
+   README's **"🎯 Give Claude a usage budget"** section at the end of a prompt.
 
 ---
 

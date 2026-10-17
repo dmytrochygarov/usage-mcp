@@ -83,6 +83,45 @@ session (or run `/mcp` to reconnect) and ask Claude about your usage.
 
 ---
 
+## 🎯 Give Claude a usage budget
+
+Paste this at the end of any prompt and change the numbers:
+
+```text
+Usage cap: 80% weekly. Check get_usage (usage MCP) now and every ~10 min, with a background timer while agents run. Stop starting new work 3 points under the cap. If the 5-hour window hits 90%, pause until it resets, then continue. Don't stop early to save usage.
+```
+
+For overnight runs with lots of subagents:
+
+```text
+Usage caps for this run: 80% weekly (every weekly bar; other sessions count), 90% 5-hour. Check get_usage (usage MCP) now, before each batch of agents, and every ~10 min with a background timer while agents run. Measure the burn rate and size the last batch to land under the cap; launch nothing within 3 points of it and give subagents the same stop line. At the 5-hour cap, pause until it resets, then continue. Don't stop early to save usage; finish with a fresh reading and remove your timers.
+```
+
+These lines come from about 25 real capped runs, many of them overnight. Each part
+fixes a failure seen in those runs:
+
+- **A concrete, labeled number.** With a number, Claude took a usage reading before
+  starting every time. With no number, heavy phases went unchecked.
+- **A timer while agents run.** Most failures came from long blind spots, not from
+  reckless spending. While background agents worked, Claude often went 20+ minutes,
+  sometimes hours, without checking. A timer keeps the checks going.
+- **Stop 3 points early.** When the trigger was the cap itself ("stop at 99%"), runs
+  ended at or past the line because work already in flight keeps spending. A small
+  margin landed them just under.
+- **Pause for the 5-hour reset.** Without this, a long run either quits early or hits
+  the 5-hour wall mid-task. With it, Claude waits for the reset and carries on.
+- **"Don't stop early."** This keeps Claude from quitting cautiously with most of the
+  budget unused.
+
+> ⚠️ This is a soft limit. Claude checks periodically, and usage is account-wide, so
+> other sessions count too. Leave yourself some margin.
+
+💡 **Running unattended?** Allow the tool so a permission prompt can't stall the run
+overnight. Add `"mcp__usage__get_usage"` to `permissions.allow` in
+`~/.claude/settings.json`.
+
+---
+
 ## 🧠 How it works
 
 ```mermaid
