@@ -355,9 +355,25 @@ def _serve(record, note=None):
         w["resets_in"] = _humanize(resets_at - now) if resets_at else None
         return w
 
+    labels = {"five_hour": "5-hour", "seven_day": "weekly"}
+    active = []
     for key in ("five_hour", "seven_day"):
-        out[key] = _enrich(record.get(key))
-    out["seven_day_scoped"] = [_enrich(s) for s in (record.get("seven_day_scoped") or [])]
+        w = _enrich(record.get(key))
+        if w.get("used_percentage") is None and w.get("resets_at") is None:
+            # The usage endpoint sent this window back empty: the account has no
+            # such limit right now (Anthropic dropped the 5-hour window in Nov 2026).
+            # Say so plainly, so a reader does not mistake null for 0% or an error.
+            w["active"] = False
+            w["note"] = (f"No {labels[key]} limit is reported for this account, "
+                         f"so there is nothing to watch for it.")
+        else:
+            w["active"] = True
+            active.append(labels[key])
+        out[key] = w
+    scoped = [_enrich(s) for s in (record.get("seven_day_scoped") or [])]
+    out["seven_day_scoped"] = scoped
+    active += [f"weekly {s.get('model')}" for s in scoped if s.get("used_percentage") is not None]
+    out["limits_in_effect"] = active
     if note:
         out["note"] = note
     return out

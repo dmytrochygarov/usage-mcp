@@ -45,6 +45,12 @@ def get_usage(force_refresh: bool = False) -> str:
           and requests are throttled until it resets.
       five_hour.resets_in / seven_day.resets_in
           Human countdown to reset, e.g. "3h 41m".
+      five_hour.active / seven_day.active
+          false when the account has no such limit (the usage endpoint reports
+          none; the 5-hour window was dropped in Nov 2026). Its numbers are then
+          null and a note says so: there is nothing to watch for that window.
+      limits_in_effect
+          The limits that actually apply right now, e.g. ["weekly", "weekly Fable"].
       seven_day_scoped
           List of per-model weekly caps (what /usage labels "Weekly Fable",
           etc.), each: model, used_percentage, resets_at, resets_in. Empty if
