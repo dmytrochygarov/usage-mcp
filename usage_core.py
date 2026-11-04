@@ -356,6 +356,9 @@ def _serve(record, note=None):
         return w
 
     labels = {"five_hour": "5-hour", "seven_day": "weekly"}
+    # The cache file keeps Anthropic's key names (other readers, e.g. RizzBot's
+    # limits card, depend on them); the served answer uses plain labels.
+    served = {"five_hour": "session_5h", "seven_day": "weekly"}
     active = []
     for key in ("five_hour", "seven_day"):
         w = _enrich(record.get(key))
@@ -369,9 +372,9 @@ def _serve(record, note=None):
         else:
             w["active"] = True
             active.append(labels[key])
-        out[key] = w
+        out[served[key]] = w
     scoped = [_enrich(s) for s in (record.get("seven_day_scoped") or [])]
-    out["seven_day_scoped"] = scoped
+    out["weekly_by_model"] = scoped
     active += [f"weekly {s.get('model')}" for s in scoped if s.get("used_percentage") is not None]
     out["limits_in_effect"] = active
     if note:

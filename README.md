@@ -60,7 +60,7 @@ cd usage-mcp
 # 2. Install the one dependency
 python -m pip install -r requirements.txt
 
-# 3. Sanity check: should print JSON with five_hour / seven_day percentages
+# 3. Sanity check: should print JSON with session_5h / weekly percentages
 python usage_cli.py
 
 # 4. Register with Claude Code (user scope = available in every project)
@@ -157,15 +157,15 @@ flowchart LR
   "source": "oauth-api",
   "data_age_seconds": 0,
   "stale": false,
-  "five_hour":  { "used_percentage": 42.0, "resets_in": "4h 8m" },
-  "seven_day":  { "used_percentage": 15.0, "resets_in": "1d 16h" },
-  "seven_day_scoped": [
+  "session_5h": { "used_percentage": 42.0, "resets_in": "4h 8m", "active": true },
+  "weekly":     { "used_percentage": 15.0, "resets_in": "1d 16h", "active": true },
+  "weekly_by_model": [
     { "model": "Fable", "used_percentage": 10.0, "resets_in": "6d 22h" }
   ]
 }
 ```
 
-`seven_day_scoped` lists per-model weekly caps (what `/usage` calls "Weekly Fable",
+`weekly_by_model` lists per-model weekly caps (what `/usage` calls "Weekly Fable",
 etc.). It's empty when your plan has none active.
 
 ---

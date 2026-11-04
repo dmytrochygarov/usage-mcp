@@ -78,7 +78,7 @@ Verify: `"PY" -c "import mcp; print('mcp ok')"` must print `mcp ok`.
 "PY" "REPO/usage_cli.py" --fresh
 ```
 
-Expected: JSON containing `five_hour.used_percentage` and `seven_day.used_percentage`
+Expected: JSON containing `session_5h.used_percentage` and `weekly.used_percentage`
 (numbers), and `"source": "oauth-api"`.
 
 Interpreting other results:

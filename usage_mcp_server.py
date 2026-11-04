@@ -36,22 +36,22 @@ def get_usage(force_refresh: bool = False) -> str:
     """Check this Claude account's current rate-limit usage.
 
     Returns the same figures Claude Code's `/usage` shows: how much of the
-    rolling **5-hour** window and the **7-day (weekly)** window has been
+    rolling **5-hour** session window and the **weekly** (7-day) window has been
     consumed, plus when each window resets.
 
     Field guide (JSON):
-      five_hour.used_percentage / seven_day.used_percentage
+      session_5h.used_percentage / weekly.used_percentage
           0–100. Higher = closer to the limit; at 100 that window is exhausted
           and requests are throttled until it resets.
-      five_hour.resets_in / seven_day.resets_in
+      session_5h.resets_in / weekly.resets_in
           Human countdown to reset, e.g. "3h 41m".
-      five_hour.active / seven_day.active
+      session_5h.active / weekly.active
           false when the account has no such limit (the usage endpoint reports
           none; the 5-hour window was dropped in Nov 2026). Its numbers are then
           null and a note says so: there is nothing to watch for that window.
       limits_in_effect
           The limits that actually apply right now, e.g. ["weekly", "weekly Fable"].
-      seven_day_scoped
+      weekly_by_model
           List of per-model weekly caps (what /usage labels "Weekly Fable",
           etc.), each: model, used_percentage, resets_at, resets_in. Empty if
           the account has no model-scoped weekly limits active.
